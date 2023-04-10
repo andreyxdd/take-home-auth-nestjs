@@ -16,6 +16,7 @@ async function bootstrap() {
     .setTitle('Auth Microservcie')
     .setDescription('The Take-home Node.js Auth Microservice')
     .setVersion('1.0.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
