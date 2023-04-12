@@ -8,6 +8,8 @@ A take home project build with Nest.js:
 
 The project has monorepo structure. The `auth-app` microservice in `apps` directory implements the functional described above.
 
+I'd greatly appreciate any feedback you can provide.
+
 ## Installation
 
 ```bash
@@ -65,4 +67,4 @@ After that you can use the `/login` endpoint to get the access token for the pro
 
 1. [Nest.js Official Documentation](https://docs.nestjs.com/)
 2. [Passport.js Official Documentation](https://www.passportjs.org/docs/)
-3. [An artical on `prisma.io` "Building a REST API with NestJS and Prisma"](https://www.prisma.io/blog/nestjs-prisma-rest-api-7D056s1BmOL0)
+3. [An artical on prisma.io "Building a REST API with NestJS and Prisma"](https://www.prisma.io/blog/nestjs-prisma-rest-api-7D056s1BmOL0)
