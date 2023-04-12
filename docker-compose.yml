@@ -6,11 +6,6 @@ services:
       - 6379:6379
     volumes:
       - redis:/data
-  rcli:
-    image: redis:latest
-    links:
-      - redis
-    command: redis-cli -h redis
   postgres:
     image: postgres:13.5
     restart: always

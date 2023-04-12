@@ -8,19 +8,22 @@ import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from '../prisma/prisma.module';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { RedisModule } from '../redis/redis.module';
-import { REDIS } from '../redis/redis.constants';
+import { RedisModule } from './redis.module';
 import * as RedisStore from 'connect-redis';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { createClient } from '@redis/client';
+import { SessionSerializer } from '../users/session.serializer';
 
 type RedisClient = ReturnType<typeof createClient>;
+
 @Module({
   imports: [
     PrismaModule,
     UsersModule,
-    PassportModule,
+    PassportModule.register({
+      session: true,
+    }),
     RedisModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -41,10 +44,10 @@ type RedisClient = ReturnType<typeof createClient>;
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, SessionSerializer],
 })
 export class AuthModule implements NestModule {
-  constructor(@Inject(REDIS) private readonly redis: RedisClient) {}
+  constructor(@Inject('REDIS_CLIENT') private readonly redis: RedisClient) {}
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(
