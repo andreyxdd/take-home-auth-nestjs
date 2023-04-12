@@ -59,3 +59,10 @@ To register in the app, use `/user` enpoint and provide a body in the following 
 ```
 
 After that you can use the `/login` endpoint to get the access token for the protected routes. Note that the email should be of the correct format, otherwise the login function will throw an error.
+
+
+## References
+
+1. [Nest.js Official Documentation](https://docs.nestjs.com/)
+2. [Passport.js Official Documentation](https://www.passportjs.org/docs/)
+3. [An artical on `prisma.io` "Building a REST API with NestJS and Prisma"](https://www.prisma.io/blog/nestjs-prisma-rest-api-7D056s1BmOL0)
