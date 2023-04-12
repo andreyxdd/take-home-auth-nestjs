@@ -13,7 +13,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   const config = new DocumentBuilder()
-    .setTitle('Auth Microservcie')
+    .setTitle('Auth Microservice')
     .setDescription('The Take-home Node.js Auth Microservice')
     .setVersion('1.0.0')
     .addBearerAuth()

@@ -12,6 +12,13 @@ export class AuthController {
   @Post('login')
   @ApiOkResponse({ type: AuthEntity })
   login(@Body() { email, password }: LoginDto) {
-    return this.authService.login(email, password);
+    return this.authService.loginJWT(email, password);
   }
+
+  // @UseGuards(LocalAuthGuard)
+  // @Post('login')
+  // @ApiOkResponse({ type: AuthEntity })
+  // login(@Body() { email, password }: LoginDto) {
+  //   return this.authService.loginLocal(email, password);
+  // }
 }

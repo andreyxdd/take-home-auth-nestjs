@@ -8,7 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from '../prisma/prisma.module';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { RedisModule } from './redis.module';
+import { LocalStrategy } from './strategies/local.strategy';
+import { RedisModule } from '../redis/redis.module';
 import * as RedisStore from 'connect-redis';
 import * as session from 'express-session';
 import * as passport from 'passport';
@@ -30,6 +31,9 @@ type RedisClient = ReturnType<typeof createClient>;
       validationSchema: Joi.object({
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.string().required(),
+        SESSION_SECRET: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.string().required(),
       }),
       envFilePath: '.env',
     }),
@@ -44,10 +48,13 @@ type RedisClient = ReturnType<typeof createClient>;
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, SessionSerializer],
+  providers: [AuthService, JwtStrategy, LocalStrategy, SessionSerializer],
 })
 export class AuthModule implements NestModule {
-  constructor(@Inject('REDIS_CLIENT') private readonly redis: RedisClient) {}
+  constructor(
+    @Inject('REDIS_CLIENT') private readonly redis: RedisClient,
+    private readonly configService: ConfigService,
+  ) {}
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(
@@ -57,7 +64,7 @@ export class AuthModule implements NestModule {
             logErrors: true,
           }),
           saveUninitialized: false,
-          secret: 'sup3rs3cr3t',
+          secret: `${this.configService.get<string>('SESSION_SECRET')}`,
           resave: false,
           cookie: {
             sameSite: true,

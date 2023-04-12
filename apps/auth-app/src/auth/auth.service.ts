@@ -12,21 +12,33 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) {}
 
-  async login(email: string, password: string): Promise<AuthEntity> {
-    // Fetch a user via provided email
+  async validateUser(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email: email } });
     if (!user) {
       throw new NotFoundException(`No user found for email: ${email}`);
     }
 
-    // Check if the password is correct
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid password');
     }
 
+    return user;
+  }
+
+  async loginJWT(email: string, password: string): Promise<AuthEntity> {
+    const user = await this.validateUser(email, password);
+
     return {
       accessToken: this.jwtService.sign({ userId: user.id }),
     };
+  }
+
+  async loginLocal(email: string, password: string) {
+    const user = await this.validateUser(email, password);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: omitted, ...rest } = user;
+    return rest;
   }
 }

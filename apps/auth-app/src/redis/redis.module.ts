@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common';
 import { createClient } from 'redis';
+
 @Module({
   providers: [
     {
       provide: 'REDIS_OPTIONS',
       useValue: {
-        url: 'redis://localhost:6379',
+        socket: {
+          host: process.env.REDIS_HOST,
+          port: process.env.REDIS_PORT,
+        },
       },
     },
     {
