@@ -1,30 +1,14 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A take home project build with Nest.js:
+- Jwt auth strategy via passport-jwt
+- Session auth strategy via passport-local, express-session, and Redis to store session data
+- PostgreSQL to handle user data
+- Swagger for API documentation and testings
+
+The project has monorepo structure. The `auth-app` microservice in `apps` directory implements the functional described above.
+
+I'd greatly appreciate any feedback you can provide.
 
 ## Installation
 
@@ -32,42 +16,55 @@
 $ npm install
 ```
 
+## Before running the app
+
+Before running the app, launch the docker-compose:
+```bash
+$ docker-compose up -d
+```
+
 ## Running the app
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ npm run start:dev auth-app
 ```
 
-## Test
+## Testing the app
 
-```bash
-# unit tests
-$ npm run test
+Once the app is up and running, open the browser at the `localhost:3000/api`. The Swagger interface should be loaded.
 
-# e2e tests
-$ npm run test:e2e
+### POST /login endpoint
 
-# test coverage
-$ npm run test:cov
+In the `auth` section, access the `/login` endpoint by providing the user email and password in the body. The postgre db is already seeded with a few users. For example, you can use the following credentials:
+```JSON
+{
+  "email": "test@test.test",
+  "password": "password-test"
+}
 ```
 
-## Support
+The response should provide an access token. Copy this token and open `Authorize` modal (green button at the top right corner on the same page). Paste the token.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### GET /users enpoint 
 
-## Stay in touch
+Now, the protected routes are avaible for you to play with. For example, you can try `/users` endpoint to get all the users from the database.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### POST /users endpoint
 
-## License
+To register in the app, use `/user` enpoint and provide a body in the following format:
+```JSON
+{
+  "name": "Andrei",
+  "email": "andrei@yandex.test",
+  "password": "qwerty123"
+}
+```
 
-Nest is [MIT licensed](LICENSE).
+After that you can use the `/login` endpoint to get the access token for the protected routes. Note that the email should be of the correct format, otherwise the login function will throw an error.
+
+
+## References
+
+1. [Nest.js Official Documentation](https://docs.nestjs.com/)
+2. [Passport.js Official Documentation](https://www.passportjs.org/docs/)
+3. [An artical on prisma.io "Building a REST API with NestJS and Prisma"](https://www.prisma.io/blog/nestjs-prisma-rest-api-7D056s1BmOL0)
