@@ -26,11 +26,9 @@ export class AuthService {
     return user;
   }
 
-  async loginJWT(email: string, password: string): Promise<AuthEntity> {
-    const user = await this.validateUser(email, password);
-
+  generateJWT(userId: number): AuthEntity {
     return {
-      accessToken: this.jwtService.sign({ userId: user.id }),
+      accessToken: this.jwtService.sign({ userId }),
     };
   }
 

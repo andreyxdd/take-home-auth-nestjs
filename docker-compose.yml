@@ -1,12 +1,15 @@
 version: '3.8'
 services:
   redis:
-    image: redis
+    container_name: "nestjs-redis"
+    image: redis:alpine
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
-      - 6379:6379
+      - "6379:6379"
     volumes:
-      - redis:/data
+      - redis:/usr/local/etc/redis/redis.conf
   postgres:
+    container_name: "nestjs-postgres"
     image: postgres:13.5
     restart: always
     environment:
